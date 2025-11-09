@@ -1,0 +1,142 @@
+﻿@model IEnumerable<EmployeeManagementSystem.Models.SalaryBonus>
+
+@{
+    ViewData["Title"] = "Salary Bonuses";
+}
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <h2 class="fw-bold"><i class="fas fa-gift me-2"></i>Salary Bonuses</h2>
+    </div>
+    <div class="col-md-6 text-end">
+        <a asp-controller="SalaryBonus" asp-action="AddBonus" class="btn btn-success">
+            <i class="fas fa-plus me-2"></i>Add Bonus
+        </a>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm bg-gradient-success text-white">
+            <div class="card-body text-center">
+                <h3 class="mb-0">@Model.Count()</h3>
+                <p class="mb-0">Total Bonuses</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm bg-gradient-primary text-white">
+            <div class="card-body text-center">
+                <h3 class="mb-0">₹@Model.Sum(b => b.Amount).ToString("N0")</h3>
+                <p class="mb-0">Total Amount</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm bg-gradient-info text-white">
+            <div class="card-body text-center">
+                <h3 class="mb-0">@Model.Select(b => b.EmployeeId).Distinct().Count()</h3>
+                <p class="mb-0">Employees Benefited</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bonuses Table -->
+<div class="card border-0 shadow-sm">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Employee</th>
+                        <th>Bonus Type</th>
+                        <th>Amount</th>
+                        <th>Bonus Date</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        @foreach (var bonus in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-sm bg-success text-white rounded-circle me-2 d-flex align-items-center justify-content-center">
+                                            @bonus.Employee.FirstName.Substring(0, 1)@bonus.Employee.LastName.Substring(0, 1)
+                                        </div>
+                                        <div>
+                                            <strong>@bonus.Employee.FirstName @bonus.Employee.LastName</strong>
+                                            <br />
+                                            <small class="text-muted">@bonus.Employee.Position</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="badge bg-info">@bonus.BonusType</span></td>
+                                <td><strong class="text-success">₹@bonus.Amount.ToString("N0")</strong></td>
+                                <td>@bonus.BonusDate.ToString("dd MMM yyyy")</td>
+                                <td>@(bonus.Description ?? "-")</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a asp-controller="SalaryBonus" asp-action="EditBonus" asp-route-id="@bonus.BonusId" 
+                                           class="btn btn-sm btn-warning" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <button onclick="deleteBonus(@bonus.BonusId)" class="btn btn-sm btn-danger" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center py-4">
+                                <i class="fas fa-gift fa-3x text-muted mb-3 d-block"></i>
+                                <p class="text-muted">No bonuses found</p>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function deleteBonus(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#e74a3b',
+                cancelButtonColor: '#858796',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '@Url.Action("DeleteBonus", "SalaryBonus")',
+                        type: 'POST',
+                        data: { id: id },
+                        success: function (response) {
+                            if (response.success) {
+                                Swal.fire('Deleted!', response.message, 'success')
+                                    .then(() => location.reload());
+                            } else {
+                                Swal.fire('Error!', response.message, 'error');
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+}

@@ -1,0 +1,88 @@
+@{
+    ViewData["Title"] = "Login";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Employee Management System</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body class="bg-gradient-primary">
+    <div class="container">
+        <div class="row justify-content-center align-items-center" style="min-height: 100vh;">
+            <div class="col-xl-5 col-lg-6 col-md-8">
+                <div class="card shadow-lg border-0 rounded-lg">
+                    <div class="card-header bg-gradient-primary text-white text-center py-4">
+                        <h3 class="font-weight-bold mb-0">
+                            <i class="fas fa-user-circle me-2"></i>Employee Management System
+                        </h3>
+                        <p class="mb-0 mt-2">Login to your account</p>
+                    </div>
+                    <div class="card-body p-5">
+                        @if (ViewBag.Error != null)
+                        {
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <i class="fas fa-exclamation-triangle me-2"></i>@ViewBag.Error
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        }
+
+                        @if (TempData["Success"] != null)
+                        {
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <i class="fas fa-check-circle me-2"></i>@TempData["Success"]
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        }
+
+                        <form asp-action="Login" method="post">
+                            <div class="mb-4">
+                                <label for="email" class="form-label">
+                                    <i class="fas fa-envelope me-2"></i>Email Address
+                                </label>
+                                <input type="email" class="form-control form-control-lg" id="email" name="email" placeholder="Enter your email" required />
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="password" class="form-label">
+                                    <i class="fas fa-lock me-2"></i>Password
+                                </label>
+                                <input type="password" class="form-control form-control-lg" id="password" name="password" placeholder="Enter your password" required />
+                            </div>
+
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Login
+                                </button>
+                            </div>
+                        </form>
+
+                        <hr class="my-4" />
+
+                        <div class="text-center">
+                            <p class="text-muted mb-0">
+                                Default Login: <strong>admin@company.com</strong> / <strong>Admin@123</strong>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <p class="text-white">
+                        <i class="fas fa-building me-2"></i>Employee Management System © 2024
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

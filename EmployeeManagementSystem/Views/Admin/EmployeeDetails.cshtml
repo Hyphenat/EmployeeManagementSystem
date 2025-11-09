@@ -1,0 +1,105 @@
+﻿@model EmployeeManagementSystem.Models.Employee
+
+@{
+    ViewData["Title"] = "Employee Details";
+}
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <h2 class="fw-bold"><i class="fas fa-user me-2"></i>Employee Details</h2>
+    </div>
+    <div class="col-md-6 text-end">
+        <a asp-action="EditEmployee" asp-route-id="@Model.EmployeeId" class="btn btn-warning">
+            <i class="fas fa-edit me-2"></i>Edit
+        </a>
+        <a asp-action="EmployeeList" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to List
+        </a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body text-center py-5">
+                <div class="avatar-lg bg-primary text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center">
+                    <h1 class="mb-0">@Model.FirstName.Substring(0, 1)@Model.LastName.Substring(0, 1)</h1>
+                </div>
+                <h4 class="fw-bold">@Model.FirstName @Model.LastName</h4>
+                <p class="text-muted mb-3">@Model.Position</p>
+                @if (Model.IsActive)
+                {
+                    <span class="badge bg-success px-3 py-2">Active</span>
+                }
+                else
+                {
+                    <span class="badge bg-danger px-3 py-2">Inactive</span>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-gradient-primary text-white">
+                <h5 class="mb-0">Personal Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <p class="mb-1 text-muted">Email</p>
+                        <p class="fw-bold"><i class="fas fa-envelope me-2"></i>@Model.Email</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-1 text-muted">Phone</p>
+                        <p class="fw-bold"><i class="fas fa-phone me-2"></i>@Model.PhoneNumber</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-1 text-muted">Department</p>
+                        <p class="fw-bold"><i class="fas fa-building me-2"></i>@Model.Department</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-1 text-muted">Position</p>
+                        <p class="fw-bold"><i class="fas fa-briefcase me-2"></i>@Model.Position</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-1 text-muted">Basic Salary</p>
+                        <p class="fw-bold"><i class="fas fa-money-bill-wave me-2"></i>₹@Model.BasicSalary.ToString("N0")</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-1 text-muted">Joining Date</p>
+                        <p class="fw-bold"><i class="fas fa-calendar me-2"></i>@Model.JoiningDate.ToString("dd MMM yyyy")</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm mt-4">
+            <div class="card-header bg-gradient-info text-white">
+                <h5 class="mb-0">Statistics</h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center g-3">
+                    <div class="col-md-4">
+                        <div class="p-3">
+                            <h3 class="text-primary">@Model.Attendances?.Count</h3>
+                            <p class="text-muted mb-0">Total Attendance</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3">
+                            <h3 class="text-success">@Model.SalaryBonuses?.Count</h3>
+                            <p class="text-muted mb-0">Bonuses Received</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3">
+                            <h3 class="text-warning">@Model.Payslips?.Count</h3>
+                            <p class="text-muted mb-0">Payslips Generated</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

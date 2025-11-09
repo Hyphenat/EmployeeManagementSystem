@@ -1,0 +1,175 @@
+@model IEnumerable<EmployeeManagementSystem.Models.Attendance>
+
+@{
+    ViewData["Title"] = "Employee Attendance Report";
+}
+
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="text-gradient">
+                    <i class="fas fa-chart-line me-2"></i>Employee Attendance Report
+                </h2>
+                <a asp-action="Index" class="btn btn-outline-primary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Attendance
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Employee Information -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Employee Information</h5>
+                            <p class="mb-1"><strong>Name:</strong> @ViewBag.Employee.FirstName @ViewBag.Employee.LastName</p>
+                            <p class="mb-1"><strong>Position:</strong> @ViewBag.Employee.Position</p>
+                            <p class="mb-1"><strong>Department:</strong> @ViewBag.Employee.Department</p>
+                        </div>
+                        <div class="col-md-6">
+                            <form method="get" class="row g-2">
+                                <input type="hidden" name="id" value="@ViewBag.Employee.EmployeeId" />
+                                <div class="col-md-5">
+                                    <label class="form-label">Month</label>
+                                    <select name="month" class="form-select">
+                                        @for (int i = 1; i <= 12; i++)
+                                        {
+                                            <option value="@i" selected="@(i == ViewBag.Month)">
+                                                @System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(i)
+                                            </option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-md-5">
+                                    <label class="form-label">Year</label>
+                                    <select name="year" class="form-select">
+                                        @for (int y = DateTime.Now.Year; y >= DateTime.Now.Year - 5; y--)
+                                        {
+                                            <option value="@y" selected="@(y == ViewBag.Year)">@y</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">&nbsp;</label>
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-filter"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Attendance Summary -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card bg-gradient-success text-white shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="text-uppercase mb-2">Present</h6>
+                    <h2 class="mb-0">@Model.Count(a => a.Status == "Present")</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-gradient-danger text-white shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="text-uppercase mb-2">Absent</h6>
+                    <h2 class="mb-0">@Model.Count(a => a.Status == "Absent")</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-gradient-warning text-white shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="text-uppercase mb-2">Half-Day</h6>
+                    <h2 class="mb-0">@Model.Count(a => a.Status == "Half-Day")</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card bg-gradient-info text-white shadow-sm">
+                <div class="card-body text-center">
+                    <h6 class="text-uppercase mb-2">Leave</h6>
+                    <h2 class="mb-0">@Model.Count(a => a.Status == "Leave")</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Attendance Details Table -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-gradient-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-table me-2"></i>Attendance Details for @System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(ViewBag.Month) @ViewBag.Year
+                    </h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Day</th>
+                                        <th>Check In</th>
+                                        <th>Check Out</th>
+                                        <th>Status</th>
+                                        <th>Remarks</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var attendance in Model)
+                                    {
+                                        <tr>
+                                            <td>@attendance.Date.ToString("dd MMM yyyy")</td>
+                                            <td>@attendance.Date.ToString("dddd")</td>
+                                            <td>@attendance.CheckInTime.ToString(@"hh\:mm")</td>
+                                            <td>@(attendance.CheckOutTime?.ToString(@"hh\:mm") ?? "-")</td>
+                                            <td>
+                                                @if (attendance.Status == "Present")
+                                                {
+                                                    <span class="badge bg-success">Present</span>
+                                                }
+                                                else if (attendance.Status == "Absent")
+                                                {
+                                                    <span class="badge bg-danger">Absent</span>
+                                                }
+                                                else if (attendance.Status == "Half-Day")
+                                                {
+                                                    <span class="badge bg-warning">Half-Day</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-info">Leave</span>
+                                                }
+                                            </td>
+                                            <td>@(attendance.Remarks ?? "-")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="empty-state">
+                            <i class="fas fa-calendar-times"></i>
+                            <h4 class="mt-3">No Attendance Records</h4>
+                            <p class="text-muted">No attendance records found for this period.</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

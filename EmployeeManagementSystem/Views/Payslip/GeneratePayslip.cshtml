@@ -1,0 +1,107 @@
+﻿@{
+    ViewData["Title"] = "Generate Payslip";
+}
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="fw-bold"><i class="fas fa-file-invoice-dollar me-2"></i>Generate Payslip</h2>
+            <a asp-controller="Payslip" asp-action="Index" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-gradient-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-calculator me-2"></i>Payslip Generation</h5>
+            </div>
+            <div class="card-body p-4">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Note:</strong> Payslip will be calculated based on attendance records and bonuses for the selected month.
+                </div>
+
+                <form asp-controller="Payslip" asp-action="GeneratePayslip" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <div class="row">
+                        <div class="col-md-12 mb-4">
+                            <label class="form-label">
+                                <i class="fas fa-user me-2"></i>Select Employee <span class="text-danger">*</span>
+                            </label>
+                            <select name="employeeId" class="form-select form-select-lg" required>
+                                <option value="">-- Select Employee --</option>
+                                @if (ViewBag.Employees != null)
+                                {
+                                    @foreach (var emp in ViewBag.Employees as IEnumerable<EmployeeManagementSystem.Models.Employee>)
+                                    {
+                                        <option value="@emp.EmployeeId">
+                                            @emp.FirstName @emp.LastName - @emp.Position (@emp.Department) - ₹@emp.BasicSalary.ToString("N0")
+                                        </option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label">
+                                <i class="fas fa-calendar me-2"></i>Month <span class="text-danger">*</span>
+                            </label>
+                            <select name="month" class="form-select form-select-lg" required>
+                                <option value="">-- Select Month --</option>
+                                @for (int i = 1; i <= 12; i++)
+                                {
+                                    <option value="@i" selected="@(i == DateTime.Now.Month)">
+                                        @System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(i)
+                                    </option>
+                                }
+                            </select>
+                        </div>
+
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label">
+                                <i class="fas fa-calendar-alt me-2"></i>Year <span class="text-danger">*</span>
+                            </label>
+                            <select name="year" class="form-select form-select-lg" required>
+                                <option value="">-- Select Year --</option>
+                                @for (int i = DateTime.Now.Year; i >= DateTime.Now.Year - 5; i--)
+                                {
+                                    <option value="@i" selected="@(i == DateTime.Now.Year)">@i</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-success btn-lg">
+                            <i class="fas fa-cogs me-2"></i>Generate Payslip
+                        </button>
+                        <a asp-controller="Payslip" asp-action="Index" class="btn btn-secondary btn-lg">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Information Card -->
+        <div class="card border-0 shadow-sm mt-4">
+            <div class="card-body">
+                <h6 class="fw-bold mb-3"><i class="fas fa-lightbulb me-2 text-warning"></i>How Payslip is Calculated:</h6>
+                <ul class="mb-0">
+                    <li>Basic Salary is taken from employee profile</li>
+                    <li>Bonuses for the selected month are automatically added</li>
+                    <li>Deductions are calculated based on absent/half days</li>
+                    <li>Net Salary = Basic Salary + Bonuses - Deductions</li>
+                    <li>Working days and present days are fetched from attendance records</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

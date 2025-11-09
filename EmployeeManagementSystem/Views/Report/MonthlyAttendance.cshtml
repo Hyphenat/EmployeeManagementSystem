@@ -1,0 +1,123 @@
+@model IEnumerable<EmployeeManagementSystem.Controllers.MonthlyAttendanceDto>
+
+@{
+    ViewData["Title"] = "Monthly Attendance Report";
+}
+
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="text-gradient">
+                    <i class="fas fa-calendar-check me-2"></i>Monthly Attendance Report
+                </h2>
+                <a asp-action="Index" class="btn btn-outline-primary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Reports
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Month/Year Filter -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form method="get" class="row g-3">
+                        <div class="col-md-5">
+                            <label class="form-label">Month</label>
+                            <select name="month" class="form-select">
+                                @for (int i = 1; i <= 12; i++)
+                                {
+                                    <option value="@i" selected="@(i == ViewBag.SelectedMonth)">
+                                        @System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(i)
+                                    </option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-5">
+                            <label class="form-label">Year</label>
+                            <select name="year" class="form-select">
+                                @for (int y = DateTime.Now.Year; y >= DateTime.Now.Year - 5; y--)
+                                {
+                                    <option value="@y" selected="@(y == ViewBag.SelectedYear)">@y</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">&nbsp;</label>
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="fas fa-filter me-2"></i>Filter
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Attendance Report Table -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-gradient-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-table me-2"></i>Attendance for @System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(ViewBag.SelectedMonth) @ViewBag.SelectedYear
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Employee ID</th>
+                                    <th>Name</th>
+                                    <th>Department</th>
+                                    <th>Total Days</th>
+                                    <th>Present</th>
+                                    <th>Absent</th>
+                                    <th>Half-Day</th>
+                                    <th>Leave</th>
+                                    <th>Attendance %</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    var attendancePercentage = item.TotalDays > 0 
+                                        ? ((decimal)(item.PresentDays + (item.HalfDays * 0.5m)) / item.TotalDays * 100) 
+                                        : 0;
+
+                                    <tr>
+                                        <td>EMP-@item.Employee.EmployeeId.ToString("D4")</td>
+                                        <td>@item.Employee.FirstName @item.Employee.LastName</td>
+                                        <td>@item.Employee.Department</td>
+                                        <td>@item.TotalDays</td>
+                                        <td><span class="badge bg-success">@item.PresentDays</span></td>
+                                        <td><span class="badge bg-danger">@item.AbsentDays</span></td>
+                                        <td><span class="badge bg-warning">@item.HalfDays</span></td>
+                                        <td><span class="badge bg-info">@item.LeaveDays</span></td>
+                                        <td>
+                                            @if (attendancePercentage >= 90)
+                                            {
+                                                <span class="badge bg-success">@attendancePercentage.ToString("F1")%</span>
+                                            }
+                                            else if (attendancePercentage >= 75)
+                                            {
+                                                <span class="badge bg-warning">@attendancePercentage.ToString("F1")%</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-danger">@attendancePercentage.ToString("F1")%</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

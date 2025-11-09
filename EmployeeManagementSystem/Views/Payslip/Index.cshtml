@@ -1,0 +1,170 @@
+﻿@model IEnumerable<EmployeeManagementSystem.Models.Payslip>
+
+@{
+    ViewData["Title"] = "Payslips";
+}
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <h2 class="fw-bold"><i class="fas fa-file-invoice me-2"></i>Payslips</h2>
+    </div>
+    <div class="col-md-6 text-end">
+        <a asp-controller="Payslip" asp-action="GeneratePayslip" class="btn btn-success">
+            <i class="fas fa-plus me-2"></i>Generate Payslip
+        </a>
+    </div>
+</div>
+
+<!-- Month/Year Filter -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <form method="get" class="row g-3">
+                    <div class="col-md-5">
+                        <label class="form-label"><i class="fas fa-calendar me-2"></i>Month</label>
+                        <select name="month" class="form-select">
+                            @for (int i = 1; i <= 12; i++)
+                            {
+                                <option value="@i" selected="@(i == ViewBag.SelectedMonth)">
+                                    @System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(i)
+                                </option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-5">
+                        <label class="form-label"><i class="fas fa-calendar me-2"></i>Year</label>
+                        <select name="year" class="form-select">
+                            @for (int y = DateTime.Now.Year; y >= DateTime.Now.Year - 5; y--)
+                            {
+                                <option value="@y" selected="@(y == ViewBag.SelectedYear)">@y</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">&nbsp;</label>
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-filter me-2"></i>Filter
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Payslips Table -->
+<div class="card border-0 shadow-sm">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Employee</th>
+                        <th>Month/Year</th>
+                        <th>Basic Salary</th>
+                        <th>Bonus</th>
+                        <th>Deductions</th>
+                        <th>Net Salary</th>
+                        <th>Working Days</th>
+                        <th>Present Days</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        @foreach (var payslip in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-sm bg-primary text-white rounded-circle me-2 d-flex align-items-center justify-content-center">
+                                            @payslip.Employee.FirstName.Substring(0, 1)@payslip.Employee.LastName.Substring(0, 1)
+                                        </div>
+                                        <div>
+                                            <strong>@payslip.Employee.FirstName @payslip.Employee.LastName</strong>
+                                            <br />
+                                            <small class="text-muted">@payslip.Employee.Position</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <strong>@System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(payslip.Month) @payslip.Year</strong>
+                                </td>
+                                <td>₹@payslip.BasicSalary.ToString("N0")</td>
+                                <td><span class="text-success fw-bold">₹@payslip.Bonus.ToString("N0")</span></td>
+                                <td><span class="text-danger">₹@payslip.Deductions.ToString("N0")</span></td>
+                                <td><strong class="text-primary">₹@payslip.NetSalary.ToString("N0")</strong></td>
+                                <td>@payslip.WorkingDays</td>
+                                <td><span class="badge bg-info">@payslip.PresentDays</span></td>
+                                <td>
+                                    @if (payslip.Status == "Paid")
+                                    {
+                                        <span class="badge bg-success">Paid</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning">Generated</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a asp-controller="Payslip" asp-action="ViewPayslip" asp-route-id="@payslip.PayslipId" class="btn btn-sm btn-info" title="View">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <button onclick="deletePayslip(@payslip.PayslipId)" class="btn btn-sm btn-danger" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="10" class="text-center py-4">
+                                <i class="fas fa-file-invoice fa-3x text-muted mb-3 d-block"></i>
+                                <p class="text-muted">No payslips found for the selected period</p>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function deletePayslip(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#e74a3b',
+                cancelButtonColor: '#858796',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '@Url.Action("DeletePayslip", "Payslip")',
+                        type: 'POST',
+                        data: { id: id },
+                        success: function (response) {
+                            if (response.success) {
+                                Swal.fire('Deleted!', response.message, 'success')
+                                    .then(() => location.reload());
+                            } else {
+                                Swal.fire('Error!', response.message, 'error');
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+}

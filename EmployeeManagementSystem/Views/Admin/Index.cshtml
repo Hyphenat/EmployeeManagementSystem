@@ -1,0 +1,125 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="fw-bold text-gradient">
+            <i class="fas fa-tachometer-alt me-2"></i>Admin Dashboard
+        </h2>
+        <p class="text-muted">Welcome back, @ViewBag.UserName!</p>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Total Employees Card -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-0 shadow-sm hover-card bg-gradient-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-white-50 text-uppercase mb-2">Total Employees</h6>
+                        <h2 class="fw-bold mb-0">@ViewBag.TotalEmployees</h2>
+                    </div>
+                    <div class="icon-lg">
+                        <i class="fas fa-users fa-3x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Salary Card -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-0 shadow-sm hover-card bg-gradient-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-white-50 text-uppercase mb-2">Total Salary</h6>
+                        <h2 class="fw-bold mb-0">₹@ViewBag.TotalSalary.ToString("N0")</h2>
+                    </div>
+                    <div class="icon-lg">
+                        <i class="fas fa-money-bill-wave fa-3x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Total Bonus Paid Card -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-0 shadow-sm hover-card bg-gradient-warning text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-white-50 text-uppercase mb-2">Bonus Paid</h6>
+                        <h2 class="fw-bold mb-0">₹@ViewBag.TotalBonusPaid.ToString("N0")</h2>
+                    </div>
+                    <div class="icon-lg">
+                        <i class="fas fa-gift fa-3x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Feedbacks Card -->
+    <div class="col-xl-3 col-md-6">
+        <div class="card border-0 shadow-sm hover-card bg-gradient-danger text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-white-50 text-uppercase mb-2">Pending Feedbacks</h6>
+                        <h2 class="fw-bold mb-0">@ViewBag.PendingFeedbacks</h2>
+                    </div>
+                    <div class="icon-lg">
+                        <i class="fas fa-comments fa-3x opacity-50"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mt-4">
+    <!-- Today's Attendance Card -->
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-gradient-info text-white">
+                <h5 class="mb-0"><i class="fas fa-calendar-check me-2"></i>Today's Attendance</h5>
+            </div>
+            <div class="card-body text-center py-5">
+                <h1 class="display-3 fw-bold text-info">@ViewBag.TodayAttendance</h1>
+                <p class="text-muted">Employees present today</p>
+                <a asp-controller="Attendance" asp-action="MarkAttendance" class="btn btn-info text-white">
+                    <i class="fas fa-plus me-2"></i>Mark Attendance
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions Card -->
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-gradient-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-bolt me-2"></i>Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-3">
+                    <a asp-controller="Admin" asp-action="AddEmployee" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-user-plus me-2"></i>Add New Employee
+                    </a>
+                    <a asp-controller="SalaryBonus" asp-action="AddBonus" class="btn btn-outline-success btn-lg">
+                        <i class="fas fa-gift me-2"></i>Add Bonus
+                    </a>
+                    <a asp-controller="Payslip" asp-action="GeneratePayslip" class="btn btn-outline-warning btn-lg">
+                        <i class="fas fa-file-invoice me-2"></i>Generate Payslip
+                    </a>
+                    <a asp-controller="Report" asp-action="Index" class="btn btn-outline-info btn-lg">
+                        <i class="fas fa-chart-bar me-2"></i>View Reports
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,211 @@
+﻿@model IEnumerable<EmployeeManagementSystem.Models.Employee>
+
+@{
+    ViewData["Title"] = "Mark Attendance";
+}
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="fw-bold"><i class="fas fa-calendar-check me-2"></i>Mark Attendance</h2>
+            <a asp-controller="Attendance" asp-action="Index" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Date Selection -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <form method="get" class="row g-3 align-items-end">
+                    <div class="col-md-4">
+                        <label class="form-label"><i class="fas fa-calendar me-2"></i>Select Date</label>
+                        <input type="date" name="date" class="form-control" value="@ViewBag.SelectedDate.ToString("yyyy-MM-dd")" />
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-search me-2"></i>Load Employees
+                        </button>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <div class="alert alert-info mb-0 d-inline-block">
+                            <i class="fas fa-info-circle me-2"></i>Marking attendance for: <strong>@ViewBag.SelectedDate.ToString("dd MMM yyyy")</strong>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Attendance Form -->
+<div class="row">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-gradient-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-users me-2"></i>Employee Attendance</h5>
+            </div>
+            <div class="card-body">
+                @if (Model != null && Model.Any())
+                {
+                    <form id="attendanceForm">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Employee ID</th>
+                                        <th>Name</th>
+                                        <th>Department</th>
+                                        <th>Check In Time</th>
+                                        <th>Check Out Time</th>
+                                        <th>Status</th>
+                                        <th>Remarks</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var employee in Model)
+                                    {
+                                        var existingAttendance = ViewBag.ExistingAttendance != null 
+                                            ? ((List<EmployeeManagementSystem.Models.Attendance>)ViewBag.ExistingAttendance)
+                                                .FirstOrDefault(a => a.EmployeeId == employee.EmployeeId)
+                                            : null;
+
+                                        <tr>
+                                            <td><strong>#@employee.EmployeeId</strong></td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="avatar-sm bg-primary text-white rounded-circle me-2 d-flex align-items-center justify-content-center">
+                                                        @employee.FirstName.Substring(0, 1)@employee.LastName.Substring(0, 1)
+                                                    </div>
+                                                    <strong>@employee.FirstName @employee.LastName</strong>
+                                                </div>
+                                            </td>
+                                            <td>@employee.Department</td>
+                                            <td>
+                                                <input type="time" class="form-control form-control-sm" 
+                                                       data-employee-id="@employee.EmployeeId" 
+                                                       data-field="checkin"
+                                                       value="@(existingAttendance?.CheckInTime.ToString(@"hh\:mm") ?? "09:00")" />
+                                            </td>
+                                            <td>
+                                                <input type="time" class="form-control form-control-sm" 
+                                                       data-employee-id="@employee.EmployeeId" 
+                                                       data-field="checkout"
+                                                       value="@(existingAttendance?.CheckOutTime?.ToString(@"hh\:mm") ?? "18:00")" />
+                                            </td>
+                                            <td>
+                                                <select class="form-select form-select-sm" 
+                                                        data-employee-id="@employee.EmployeeId" 
+                                                        data-field="status">
+                                                    <option value="Present" selected="@(existingAttendance?.Status == "Present" || existingAttendance == null)">Present</option>
+                                                    <option value="Absent" selected="@(existingAttendance?.Status == "Absent")">Absent</option>
+                                                    <option value="Half-Day" selected="@(existingAttendance?.Status == "Half-Day")">Half-Day</option>
+                                                    <option value="Leave" selected="@(existingAttendance?.Status == "Leave")">Leave</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control form-control-sm" 
+                                                       data-employee-id="@employee.EmployeeId" 
+                                                       data-field="remarks"
+                                                       value="@(existingAttendance?.Remarks ?? "")"
+                                                       placeholder="Optional remarks" />
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="mt-4 text-end">
+                            <button type="button" onclick="saveAttendance()" class="btn btn-success btn-lg">
+                                <i class="fas fa-save me-2"></i>Save Attendance
+                            </button>
+                            <a asp-controller="Attendance" asp-action="Index" class="btn btn-secondary btn-lg">
+                                <i class="fas fa-times me-2"></i>Cancel
+                            </a>
+                        </div>
+                    </form>
+                }
+                else
+                {
+                    <div class="empty-state">
+                        <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                        <h4>No Active Employees Found</h4>
+                        <p class="text-muted">There are no active employees to mark attendance for.</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function saveAttendance() {
+            const selectedDate = '@ViewBag.SelectedDate.ToString("yyyy-MM-dd")';
+            const attendanceData = [];
+
+            // Collect data from all rows
+            @foreach (var employee in Model)
+            {
+                @:const emp@(employee.EmployeeId) = {
+                @:    EmployeeId: @employee.EmployeeId,
+                @:    Date: selectedDate,
+                @:    CheckInTime: document.querySelector('input[data-employee-id="@employee.EmployeeId"][data-field="checkin"]').value,
+                @:    CheckOutTime: document.querySelector('input[data-employee-id="@employee.EmployeeId"][data-field="checkout"]').value,
+                @:    Status: document.querySelector('select[data-employee-id="@employee.EmployeeId"][data-field="status"]').value,
+                @:    Remarks: document.querySelector('input[data-employee-id="@employee.EmployeeId"][data-field="remarks"]').value
+                @:};
+                @:attendanceData.push(emp@(employee.EmployeeId));
+            }
+
+            // Show loading
+            Swal.fire({
+                title: 'Saving...',
+                text: 'Please wait while we save attendance',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
+            // Send AJAX request
+            $.ajax({
+                url: '@Url.Action("SaveAttendance", "Attendance")',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(attendanceData),
+                success: function(response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: response.message,
+                            confirmButtonColor: '#1cc88a'
+                        }).then(() => {
+                            window.location.href = '@Url.Action("Index", "Attendance")';
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: response.message,
+                            confirmButtonColor: '#e74a3b'
+                        });
+                    }
+                },
+                error: function() {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Failed to save attendance. Please try again.',
+                        confirmButtonColor: '#e74a3b'
+                    });
+                }
+            });
+        }
+    </script>
+}

@@ -1,0 +1,118 @@
+@model EmployeeManagementSystem.Models.Feedback
+
+@{
+    ViewData["Title"] = "Feedback Details";
+}
+
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="text-gradient">
+                    <i class="fas fa-comment-dots me-2"></i>Feedback Details
+                </h2>
+                <a asp-action="Index" class="btn btn-outline-primary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Feedbacks
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Feedback Card -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-gradient-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle me-2"></i>Feedback Information
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <p class="mb-2"><strong>Employee:</strong> @Model.Employee.FirstName @Model.Employee.LastName</p>
+                            <p class="mb-2"><strong>Department:</strong> @Model.Employee.Department</p>
+                        </div>
+                        <div class="col-md-6 text-md-end">
+                            <p class="mb-2"><strong>Submitted Date:</strong> @Model.SubmittedDate.ToString("dd MMM yyyy, hh:mm tt")</p>
+                            <p class="mb-2">
+                                <strong>Status:</strong>
+                                @if (Model.Status == "Pending")
+                                {
+                                    <span class="badge bg-warning">Pending</span>
+                                }
+                                else if (Model.Status == "Reviewed")
+                                {
+                                    <span class="badge bg-info">Reviewed</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success">Resolved</span>
+                                }
+                            </p>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="mb-3">
+                        <h6 class="text-primary">
+                            <i class="fas fa-heading me-2"></i>Subject
+                        </h6>
+                        <p>@Model.Subject</p>
+                    </div>
+                    <div class="mb-3">
+                        <h6 class="text-primary">
+                            <i class="fas fa-comment me-2"></i>Message
+                        </h6>
+                        <p>@Model.Message</p>
+                    </div>
+                    @if (!string.IsNullOrEmpty(Model.AdminResponse))
+                    {
+                        <hr />
+                        <div class="alert alert-info">
+                            <h6 class="alert-heading">
+                                <i class="fas fa-reply me-2"></i>Admin Response
+                            </h6>
+                            <p class="mb-0">@Model.AdminResponse</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Update Status Card -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-gradient-success text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-tasks me-2"></i>Update Feedback
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="UpdateStatus" method="post">
+                        <input type="hidden" name="id" value="@Model.FeedbackId" />
+
+                        <div class="mb-3">
+                            <label class="form-label">Status</label>
+                            <select name="status" class="form-select" required>
+                                <option value="Pending" selected="@(Model.Status == "Pending")">Pending</option>
+                                <option value="Reviewed" selected="@(Model.Status == "Reviewed")">Reviewed</option>
+                                <option value="Resolved" selected="@(Model.Status == "Resolved")">Resolved</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Admin Response</label>
+                            <textarea name="adminResponse" class="form-control" rows="5" placeholder="Enter your response...">@Model.AdminResponse</textarea>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-save me-2"></i>Update Feedback
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

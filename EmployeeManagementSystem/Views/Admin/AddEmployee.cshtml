@@ -1,0 +1,149 @@
+﻿@model EmployeeManagementSystem.Models.Employee
+
+@{
+    ViewData["Title"] = "Add Employee";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="fas fa-user-plus"></i> Add New Employee</h2>
+            <a asp-controller="Admin" asp-action="EmployeeList" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-10 mx-auto">
+        <div class="card">
+            <div class="card-header bg-gradient-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-info-circle"></i> Employee Information</h5>
+            </div>
+            <div class="card-body">
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show">
+                        <i class="fas fa-exclamation-circle"></i> @ViewBag.Error
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+
+                <form asp-controller="Admin" asp-action="AddEmployee" method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <!-- Hidden fields for auto-filled values -->
+                    <input type="hidden" asp-for="Role" value="Employee" />
+                    <input type="hidden" asp-for="IsActive" value="true" />
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="FirstName" class="form-label">
+                                <i class="fas fa-user"></i> First Name <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="FirstName" class="form-control" placeholder="Enter first name" required />
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="LastName" class="form-label">
+                                <i class="fas fa-user"></i> Last Name <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="LastName" class="form-control" placeholder="Enter last name" required />
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Email" class="form-label">
+                                <i class="fas fa-envelope"></i> Email <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="Email" type="email" class="form-control" placeholder="email@example.com" required />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="PhoneNumber" class="form-label">
+                                <i class="fas fa-phone"></i> Phone Number <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="PhoneNumber" class="form-control" placeholder="1234567890" required />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Password" class="form-label">
+                                <i class="fas fa-lock"></i> Password <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="Password" type="password" class="form-control" placeholder="Enter password" required />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="JoiningDate" class="form-label">
+                                <i class="fas fa-calendar"></i> Joining Date <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="JoiningDate" type="date" class="form-control" required />
+                            <span asp-validation-for="JoiningDate" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Position" class="form-label">
+                                <i class="fas fa-briefcase"></i> Position <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="Position" class="form-control" placeholder="e.g., Software Developer" required />
+                            <span asp-validation-for="Position" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Department" class="form-label">
+                                <i class="fas fa-building"></i> Department <span class="text-danger">*</span>
+                            </label>
+                            <select asp-for="Department" class="form-control" required>
+                                <option value="">Select Department</option>
+                                <option value="IT">IT</option>
+                                <option value="HR">HR</option>
+                                <option value="Finance">Finance</option>
+                                <option value="Marketing">Marketing</option>
+                                <option value="Sales">Sales</option>
+                                <option value="Operations">Operations</option>
+                            </select>
+                            <span asp-validation-for="Department" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="BasicSalary" class="form-label">
+                                <i class="fas fa-dollar-sign"></i> Basic Salary <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="BasicSalary" type="number" step="0.01" class="form-control" placeholder="50000" required />
+                            <span asp-validation-for="BasicSalary" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fas fa-save"></i> Save Employee
+                        </button>
+                        <a asp-controller="Admin" asp-action="EmployeeList" class="btn btn-secondary btn-lg">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

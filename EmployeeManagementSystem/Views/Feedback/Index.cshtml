@@ -1,0 +1,168 @@
+﻿@model IEnumerable<EmployeeManagementSystem.Models.Feedback>
+
+@{
+    ViewData["Title"] = "Employee Feedbacks";
+}
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <h2 class="fw-bold"><i class="fas fa-comments me-2"></i>Employee Feedbacks</h2>
+    </div>
+    <div class="col-md-6 text-end">
+        <!-- Status Filter -->
+        <div class="btn-group" role="group">
+            <a asp-controller="Feedback" asp-action="Index" asp-route-status="All" 
+               class="btn btn-outline-primary @(ViewBag.SelectedStatus == "All" ? "active" : "")">All</a>
+            <a asp-controller="Feedback" asp-action="Index" asp-route-status="Pending" 
+               class="btn btn-outline-warning @(ViewBag.SelectedStatus == "Pending" ? "active" : "")">Pending</a>
+            <a asp-controller="Feedback" asp-action="Index" asp-route-status="Reviewed" 
+               class="btn btn-outline-info @(ViewBag.SelectedStatus == "Reviewed" ? "active" : "")">Reviewed</a>
+            <a asp-controller="Feedback" asp-action="Index" asp-route-status="Resolved" 
+               class="btn btn-outline-success @(ViewBag.SelectedStatus == "Resolved" ? "active" : "")">Resolved</a>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm bg-warning text-white">
+            <div class="card-body text-center">
+                <h3 class="mb-0">@Model.Count(f => f.Status == "Pending")</h3>
+                <p class="mb-0">Pending</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm bg-info text-white">
+            <div class="card-body text-center">
+                <h3 class="mb-0">@Model.Count(f => f.Status == "Reviewed")</h3>
+                <p class="mb-0">Reviewed</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm bg-success text-white">
+            <div class="card-body text-center">
+                <h3 class="mb-0">@Model.Count(f => f.Status == "Resolved")</h3>
+                <p class="mb-0">Resolved</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Feedbacks List -->
+<div class="card border-0 shadow-sm">
+    <div class="card-body">
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var feedback in Model)
+            {
+                <div class="card mb-3 hover-card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h5 class="card-title">
+                                    <i class="fas fa-envelope-open-text me-2 text-primary"></i>
+                                    @feedback.Subject
+                                </h5>
+                                <p class="text-muted mb-2">
+                                    <i class="fas fa-user me-2"></i>
+                                    <strong>@feedback.Employee.FirstName @feedback.Employee.LastName</strong> 
+                                    (@feedback.Employee.Department)
+                                </p>
+                                <p class="card-text">@feedback.Message</p>
+                                <p class="text-muted mb-0">
+                                    <i class="fas fa-calendar me-2"></i>
+                                    @feedback.SubmittedDate.ToString("dd MMM yyyy, hh:mm tt")
+                                </p>
+                            </div>
+                            <div class="col-md-4 text-end">
+                                <div class="mb-3">
+                                    @if (feedback.Status == "Pending")
+                                    {
+                                        <span class="badge bg-warning fs-6">
+                                            <i class="fas fa-clock me-1"></i>Pending
+                                        </span>
+                                    }
+                                    else if (feedback.Status == "Reviewed")
+                                    {
+                                        <span class="badge bg-info fs-6">
+                                            <i class="fas fa-eye me-1"></i>Reviewed
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success fs-6">
+                                            <i class="fas fa-check-circle me-1"></i>Resolved
+                                        </span>
+                                    }
+                                </div>
+                                <div class="btn-group-vertical w-100" role="group">
+                                    <a asp-controller="Feedback" asp-action="Details" asp-route-id="@feedback.FeedbackId" 
+                                       class="btn btn-primary">
+                                        <i class="fas fa-eye me-2"></i>View Details
+                                    </a>
+                                    <button onclick="deleteFeedback(@feedback.FeedbackId)" class="btn btn-danger">
+                                        <i class="fas fa-trash me-2"></i>Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(feedback.AdminResponse))
+                        {
+                            <hr />
+                            <div class="alert alert-info mb-0">
+                                <h6 class="alert-heading">
+                                    <i class="fas fa-reply me-2"></i>Admin Response:
+                                </h6>
+                                <p class="mb-0">@feedback.AdminResponse</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="text-center py-5">
+                <i class="fas fa-comments fa-3x text-muted mb-3 d-block"></i>
+                <h4>No Feedbacks Found</h4>
+                <p class="text-muted">No feedbacks available for the selected filter.</p>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function deleteFeedback(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#e74a3b',
+                cancelButtonColor: '#858796',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '@Url.Action("DeleteFeedback", "Feedback")',
+                        type: 'POST',
+                        data: { id: id },
+                        success: function (response) {
+                            if (response.success) {
+                                Swal.fire('Deleted!', response.message, 'success')
+                                    .then(() => location.reload());
+                            } else {
+                                Swal.fire('Error!', response.message, 'error');
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+}

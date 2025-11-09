@@ -1,0 +1,286 @@
+﻿html
+@{
+    ViewData["Title"] = "Reports";
+}
+
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="fw-bold"><i class="fas fa-chart-bar me-2"></i>Reports Dashboard</h2>
+        <p class="text-muted">Access comprehensive reports and analytics for your organization</p>
+    </div>
+</div>
+
+<!-- Quick Stats -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm bg-gradient-primary text-white">
+            <div class="card-body text-center">
+                <i class="fas fa-users fa-3x mb-3 opacity-50"></i>
+                <h4 class="mb-0">Employee Reports</h4>
+                <p class="mb-0">Overview & Analytics</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm bg-gradient-success text-white">
+            <div class="card-body text-center">
+                <i class="fas fa-calendar-check fa-3x mb-3 opacity-50"></i>
+                <h4 class="mb-0">Attendance Reports</h4>
+                <p class="mb-0">Monthly Tracking</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm bg-gradient-info text-white">
+            <div class="card-body text-center">
+                <i class="fas fa-money-bill-wave fa-3x mb-3 opacity-50"></i>
+                <h4 class="mb-0">Salary Reports</h4>
+                <p class="mb-0">Financial Analysis</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm bg-gradient-warning text-white">
+            <div class="card-body text-center">
+                <i class="fas fa-chart-line fa-3x mb-3 opacity-50"></i>
+                <h4 class="mb-0">Performance</h4>
+                <p class="mb-0">Trends & Insights</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Report Cards -->
+<div class="row g-4">
+    <!-- Employee Overview Report -->
+    <div class="col-lg-4 col-md-6">
+        <div class="card border-0 shadow-sm hover-card h-100">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="bg-primary bg-opacity-10 rounded-circle p-3 me-3">
+                        <i class="fas fa-users fa-2x text-primary"></i>
+                    </div>
+                    <div>
+                        <h5 class="card-title mb-0">Employee Overview</h5>
+                        <p class="text-muted mb-0">Complete employee analytics</p>
+                    </div>
+                </div>
+                <p class="card-text text-muted">
+                    Get a comprehensive view of all employees with total bonuses, salary paid, and performance metrics.
+                </p>
+                <ul class="list-unstyled mb-3">
+                    <li><i class="fas fa-check text-success me-2"></i>Employee Details</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Total Bonuses</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Salary Summary</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Department Wise</li>
+                </ul>
+                <a asp-controller="Report" asp-action="EmployeeOverview" class="btn btn-primary w-100">
+                    <i class="fas fa-file-alt me-2"></i>View Report
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Monthly Attendance Report -->
+    <div class="col-lg-4 col-md-6">
+        <div class="card border-0 shadow-sm hover-card h-100">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="bg-success bg-opacity-10 rounded-circle p-3 me-3">
+                        <i class="fas fa-calendar-check fa-2x text-success"></i>
+                    </div>
+                    <div>
+                        <h5 class="card-title mb-0">Monthly Attendance</h5>
+                        <p class="text-muted mb-0">Attendance tracking report</p>
+                    </div>
+                </div>
+                <p class="card-text text-muted">
+                    View detailed monthly attendance records with present, absent, half-day, and leave statistics.
+                </p>
+                <ul class="list-unstyled mb-3">
+                    <li><i class="fas fa-check text-success me-2"></i>Present Days</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Absent Days</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Half-Day Count</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Attendance %</li>
+                </ul>
+                <a asp-controller="Report" asp-action="MonthlyAttendance" class="btn btn-success w-100">
+                    <i class="fas fa-file-alt me-2"></i>View Report
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Salary Report -->
+    <div class="col-lg-4 col-md-6">
+        <div class="card border-0 shadow-sm hover-card h-100">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="bg-info bg-opacity-10 rounded-circle p-3 me-3">
+                        <i class="fas fa-money-bill-wave fa-2x text-info"></i>
+                    </div>
+                    <div>
+                        <h5 class="card-title mb-0">Salary Report</h5>
+                        <p class="text-muted mb-0">Financial breakdown</p>
+                    </div>
+                </div>
+                <p class="card-text text-muted">
+                    Analyze salary distribution with basic salary, bonuses, deductions, and net salary details.
+                </p>
+                <ul class="list-unstyled mb-3">
+                    <li><i class="fas fa-check text-success me-2"></i>Basic Salary</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Bonus Details</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Deductions</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Net Salary</li>
+                </ul>
+                <a asp-controller="Report" asp-action="SalaryReport" class="btn btn-info w-100 text-white">
+                    <i class="fas fa-file-alt me-2"></i>View Report
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Department Report -->
+    <div class="col-lg-4 col-md-6">
+        <div class="card border-0 shadow-sm hover-card h-100">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="bg-warning bg-opacity-10 rounded-circle p-3 me-3">
+                        <i class="fas fa-building fa-2x text-warning"></i>
+                    </div>
+                    <div>
+                        <h5 class="card-title mb-0">Department Wise</h5>
+                        <p class="text-muted mb-0">Department analytics</p>
+                    </div>
+                </div>
+                <p class="card-text text-muted">
+                    View employee distribution, attendance, and salary statistics across different departments.
+                </p>
+                <ul class="list-unstyled mb-3">
+                    <li><i class="fas fa-check text-success me-2"></i>Employee Count</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Total Salary</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Attendance Rate</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Performance</li>
+                </ul>
+                <button class="btn btn-warning w-100" disabled>
+                    <i class="fas fa-file-alt me-2"></i>Coming Soon
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Performance Report -->
+    <div class="col-lg-4 col-md-6">
+        <div class="card border-0 shadow-sm hover-card h-100">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="bg-danger bg-opacity-10 rounded-circle p-3 me-3">
+                        <i class="fas fa-chart-line fa-2x text-danger"></i>
+                    </div>
+                    <div>
+                        <h5 class="card-title mb-0">Performance Report</h5>
+                        <p class="text-muted mb-0">Employee performance</p>
+                    </div>
+                </div>
+                <p class="card-text text-muted">
+                    Analyze employee performance based on attendance, bonuses received, and overall contribution.
+                </p>
+                <ul class="list-unstyled mb-3">
+                    <li><i class="fas fa-check text-success me-2"></i>Top Performers</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Bonus Recipients</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Attendance Score</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Growth Trends</li>
+                </ul>
+                <button class="btn btn-danger w-100" disabled>
+                    <i class="fas fa-file-alt me-2"></i>Coming Soon
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Report -->
+    <div class="col-lg-4 col-md-6">
+        <div class="card border-0 shadow-sm hover-card h-100">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="bg-secondary bg-opacity-10 rounded-circle p-3 me-3">
+                        <i class="fas fa-cogs fa-2x text-secondary"></i>
+                    </div>
+                    <div>
+                        <h5 class="card-title mb-0">Custom Report</h5>
+                        <p class="text-muted mb-0">Build your own</p>
+                    </div>
+                </div>
+                <p class="card-text text-muted">
+                    Create custom reports with specific parameters, date ranges, and filters as per your requirements.
+                </p>
+                <ul class="list-unstyled mb-3">
+                    <li><i class="fas fa-check text-success me-2"></i>Custom Filters</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Date Range</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Export Options</li>
+                    <li><i class="fas fa-check text-success me-2"></i>Save Templates</li>
+                </ul>
+                <button class="btn btn-secondary w-100" disabled>
+                    <i class="fas fa-file-alt me-2"></i>Coming Soon
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Export Options Section -->
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm bg-light">
+            <div class="card-body p-4">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h5 class="mb-2">
+                            <i class="fas fa-download me-2 text-primary"></i>Export Reports
+                        </h5>
+                        <p class="text-muted mb-0">
+                            Download reports in various formats including PDF, Excel, and CSV for offline analysis and record keeping.
+                        </p>
+                    </div>
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                        <button class="btn btn-outline-danger me-2" disabled>
+                            <i class="fas fa-file-pdf me-2"></i>PDF
+                        </button>
+                        <button class="btn btn-outline-success me-2" disabled>
+                            <i class="fas fa-file-excel me-2"></i>Excel
+                        </button>
+                        <button class="btn btn-outline-info" disabled>
+                            <i class="fas fa-file-csv me-2"></i>CSV
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Help Section -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <h5 class="mb-3">
+                    <i class="fas fa-question-circle me-2 text-info"></i>Need Help?
+                </h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary">How to Use Reports</h6>
+                        <p class="text-muted small">
+                            Click on any report card above to access detailed analytics. Use filters to customize data range and parameters.
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-primary">Report Accuracy</h6>
+                        <p class="text-muted small">
+                            All reports are generated in real-time from the database. Ensure attendance and payslips are up-to-date for accurate results.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

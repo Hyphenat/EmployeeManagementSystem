@@ -1,0 +1,172 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Employee Management System</title>
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-gradient-primary shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="@(Context.Session.GetString("UserRole") == "Admin" ? Url.Action("Index", "Admin") : Url.Action("Index", "Employee"))">
+                <i class="fas fa-building me-2"></i>Employee Management System
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    @if (Context.Session.GetString("UserRole") == "Admin")
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index", "Admin")">
+                                <i class="fas fa-home me-1"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("EmployeeList", "Admin")">
+                                <i class="fas fa-users me-1"></i> Employees
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index", "Attendance")">
+                                <i class="fas fa-calendar-check me-1"></i> Attendance
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index", "SalaryBonus")">
+                                <i class="fas fa-money-bill-wave me-1"></i> Bonuses
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index", "Payslip")">
+                                <i class="fas fa-file-invoice me-1"></i> Payslips
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index", "Feedback")">
+                                <i class="fas fa-comments me-1"></i> Feedback
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index", "Report")">
+                                <i class="fas fa-chart-bar me-1"></i> Reports
+                            </a>
+                        </li>
+                    }
+                    else if (Context.Session.GetString("UserRole") == "Employee")
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("Index", "Employee")">
+                                <i class="fas fa-home me-1"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("MyProfile", "Employee")">
+                                <i class="fas fa-user me-1"></i> My Profile
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("MyAttendance", "Employee")">
+                                <i class="fas fa-calendar-check me-1"></i> Attendance
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("MySalary", "Employee")">
+                                <i class="fas fa-money-bill-wave me-1"></i> Salary
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("MyFeedbacks", "Employee")">
+                                <i class="fas fa-comments me-1"></i> Feedback
+                            </a>
+                        </li>
+                    }
+
+                    @if (Context.Session.GetString("UserName") != null)
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle me-1"></i> @Context.Session.GetString("UserName")
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                @if (Context.Session.GetString("UserRole") == "Employee")
+                                {
+                                    <li><a class="dropdown-item" href="@Url.Action("ChangePassword", "Employee")"><i class="fas fa-key me-2"></i>Change Password</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                }
+                                <li><a class="dropdown-item" href="@Url.Action("Logout", "Account")"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                            </ul>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-fill">
+        <div class="container-fluid py-4">
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show">
+                    <i class="fas fa-check-circle me-2"></i>@TempData["Success"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show">
+                    <i class="fas fa-exclamation-triangle me-2"></i>@TempData["Error"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            @RenderBody()
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer mt-auto py-4 bg-light border-top">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="mb-0 text-muted">
+                        <i class="fas fa-copyright me-1"></i> 2024 Employee Management System. All rights reserved.
+                    </p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <p class="mb-0 text-muted">
+                        Developed with <i class="fas fa-heart text-danger"></i> by Your Company
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
