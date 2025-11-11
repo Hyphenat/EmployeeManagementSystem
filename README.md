@@ -403,7 +403,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👨‍💻 Author
 
-**Your Name**
+Farhan Sargath
 - GitHub: [@Hyphenat]
 - LinkedIn: [FARHAN SARGATH](https://www.linkedin.com/in/farhan-sargath-646b06292/)
 - Email: fsargath@gmail.com
